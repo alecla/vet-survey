@@ -1,5 +1,5 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import { ReactElement, useState } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { ReactElement, useState } from 'react';
 import {
   Alert,
   Button,
@@ -8,10 +8,9 @@ import {
   Form,
   Stack,
   ToggleButton,
-  ToggleButtonGroup,
-  Row,
-} from "react-bootstrap";
-import formData from "./form-data";
+  ToggleButtonGroup
+} from 'react-bootstrap';
+import formData from './form-data';
 
 /*
 
@@ -34,18 +33,18 @@ type Form = {
 };
 
 const FORM_STEPS = {
-  INITIAL: "INITIAL_STEP",
-  CONFIRMATION: "SUCCESS_STEP",
-  INVALID: "INVALID",
+  INITIAL: 'INITIAL_STEP',
+  CONFIRMATION: 'SUCCESS_STEP',
+  INVALID: 'INVALID'
 };
 
 const FORM_INITIAL_STATE: Form = {
-  "group-how-did-you-hear-about-us": "",
-  "group-overall-satisfaction": "",
-  "group-opinion-staff": [],
-  "group-recommend-us": "",
-  "group-prices-reasonable": "3",
-  "group-improve-how": "",
+  'group-how-did-you-hear-about-us': '',
+  'group-overall-satisfaction': '',
+  'group-opinion-staff': [],
+  'group-recommend-us': '',
+  'group-prices-reasonable': '3',
+  'group-improve-how': ''
 };
 
 const handleSubmit =
@@ -61,7 +60,7 @@ const handleSubmit =
     }
 
     setFormStep(FORM_STEPS.CONFIRMATION);
-    console.log(e, "e");
+    console.log(e, 'e');
   };
 
 const renderForm = (
@@ -80,8 +79,8 @@ const renderForm = (
         <Form.Group key={questionGroup.name} className="mb-3">
           <Form.Label>{questionGroup.label}</Form.Label>
           <Container>
-            {(questionGroup.type === "radio" ||
-              questionGroup.type === "checkbox") && (
+            {(questionGroup.type === 'radio' ||
+              questionGroup.type === 'checkbox') && (
               <ToggleButtonGroup
                 type={questionGroup.type}
                 name={questionGroup.name}
@@ -102,29 +101,29 @@ const renderForm = (
                 ))}
               </ToggleButtonGroup>
             )}
-            {questionGroup.type === "textarea" && (
+            {questionGroup.type === 'textarea' && (
               <Form.Control
                 key={questionGroup.name}
                 name={questionGroup.name}
-                value={form[questionGroup.name] ?? ""}
+                value={form[questionGroup.name] ?? ''}
                 onChange={handleChange}
                 as="textarea"
                 rows={3}
               />
             )}
-            {questionGroup.type === "range" && (
+            {questionGroup.type === 'range' && (
               <>
                 <Form.Range
                   name={questionGroup.name}
                   min={1}
                   max={questionGroup.fields?.length}
-                  value={form[questionGroup.name] ?? ""}
+                  value={form[questionGroup.name] ?? ''}
                   onChange={handleChange}
                 />
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  {questionGroup?.fields?.map((input, index) => (
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  {questionGroup?.fields?.map((input) => (
                     <div key={input.value}>
-                      <p style={{ textAlign: "left" }}>{input.label}</p>
+                      <p style={{ textAlign: 'left' }}>{input.label}</p>
                     </div>
                   ))}
                 </div>
@@ -150,7 +149,7 @@ const renderFormConfirmation = (form: Form): ReactElement => {
     <Alert variant="success">
       {Object.entries(form).map(([key, value]) => {
         const getLabelForKey =
-          formData.find((group) => group.name === key)?.label ?? "";
+          formData.find((group) => group.name === key)?.label ?? '';
           const getLabelFromValue = formData.find(question => question.name === key);
           const formattedValue = (getLabelFromValue && getLabelFromValue?.fields?.find(field => field.value === value)?.label) ?? 'Not answered';
         return (
@@ -176,7 +175,7 @@ const App = () => {
     const currentValueForInput: string | string[] = form[e.target.name];
 
     const value =
-      e.target.type === "checkbox" && typeof currentValueForInput !== "string"
+      e.target.type === 'checkbox' && typeof currentValueForInput !== 'string'
         ? currentValueForInput?.some((item) => item === e.target.value)
           ? currentValueForInput.filter((item) => item !== e.target.value)
           : [...(currentValueForInput ?? []), e.target.value]
@@ -184,7 +183,7 @@ const App = () => {
 
     setForm({
       ...form,
-      [e.target.name]: value,
+      [e.target.name]: value
     });
   };
 
@@ -192,7 +191,7 @@ const App = () => {
     setForm(FORM_INITIAL_STATE);
   };
 
-  console.log(form, "form rendeer");
+  console.log(form, 'form rendeer');
 
   return (
     <Card>
@@ -200,8 +199,8 @@ const App = () => {
         <h1>Veterinary consultation survey</h1>
         <h5>
           {formStep !== FORM_STEPS.CONFIRMATION
-            ? "Please take a few minutes of your time to fill in the following questions"
-            : "Thank you for completing our survey. Here have a cookie!"}
+            ? 'Please take a few minutes of your time to fill in the following questions'
+            : 'Thank you for completing our survey. Here have a cookie!'}
         </h5>
       </Card.Header>
       <Card.Body>
