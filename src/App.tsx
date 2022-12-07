@@ -117,14 +117,14 @@ const renderFormConfirmation = (form: Form): JSX.Element => {
 		<Alert variant='success'>
 			{Object.entries(form).map(([key, value]) => {
 				const getLabelForKey = formData.find((group) => group.name === key)?.label ?? '';
-				const getLabelFromValue = formData.find((question) => question.name === key);
-				const formattedValue =
-					getLabelFromValue?.fields?.find((field: {[key: string]: string}) => field.value === value)?.label ??
-					'Not answered';
+				const getLabelFromValueObj = formData.find((question) => question.name === key);
+				const formattedValue: string = 
+					getLabelFromValueObj?.fields?.filter((field: {[key: string]: string}) => field.value === value || value.includes(field.value)).map((field: {[key: string]: string}) => field.label).join(', ') ||
+					value;
 				return (
 					<div key={getLabelForKey}>
 						<p>{getLabelForKey}</p>
-						<p>{formattedValue}</p>
+						<p>{formattedValue || 'Not answered'}</p>
 						<hr />
 					</div>
 				);
