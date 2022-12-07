@@ -23,7 +23,7 @@ const FORM_INITIAL_STATE: Form = {
 };
 
 const handleSubmit =
-	(formHasAtLeastOneAnsweredQuestion: boolean, setFormStep: (arg: string) => void) =>
+	(formHasAtLeastOneAnsweredQuestion: boolean, setForm: (arg: Form) => void, setFormStep: (arg: string) => void) =>
 	(e: React.FormEvent): void => {
 		e.preventDefault();
 		if (!formHasAtLeastOneAnsweredQuestion) {
@@ -32,18 +32,17 @@ const handleSubmit =
 		}
 
 		setFormStep(FORM_STEPS.CONFIRMATION);
+		setForm(FORM_INITIAL_STATE);
 		console.log(e, 'e');
 	};
 
 const renderForm = (
 	handleChange: React.ChangeEventHandler,
 	form: Form,
-	formStep: string,
-	formHasAtLeastOneAnsweredQuestion: boolean,
-	setFormStep: (arg: string) => void
+	formStep: string
 ): JSX.Element => {
 	return (
-		<Form id='survey' onSubmit={handleSubmit(formHasAtLeastOneAnsweredQuestion, setFormStep)}>
+		<Form>
 			{formData.map((questionGroup) => (
 				<Form.Group key={questionGroup.name} className='mb-3'>
 					<Form.Label>{questionGroup.label}</Form.Label>
@@ -118,7 +117,7 @@ const renderFormConfirmation = (form: Form): JSX.Element => {
 			{Object.entries(form).map(([key, value]) => {
 				const getLabelForKey = formData.find((group) => group.name === key)?.label ?? '';
 				const getLabelFromValueObj = formData.find((question) => question.name === key);
-				const formattedValue: string = 
+				const formattedValue: string | string[] = 
 					getLabelFromValueObj?.fields?.filter((field: {[key: string]: string}) => field.value === value || value.includes(field.value)).map((field: {[key: string]: string}) => field.label).join(', ') ||
 					value;
 				return (
@@ -156,7 +155,7 @@ const App = () => {
 	};
 
 	const handleReset = () => {
-		setForm(FORM_INITIAL_STATE);
+		setFormStep(FORM_STEPS.INITIAL)
 	};
 
 	console.log(form, 'form rendeer');
@@ -174,7 +173,7 @@ const App = () => {
 			<Card.Body>
 				<Container className='my-4'>
 					{formStep !== FORM_STEPS.CONFIRMATION
-						? renderForm(handleChange, form, formStep, formHasAtLeastOneAnsweredQuestion, setFormStep)
+						? renderForm(handleChange, form, formStep)
 						: renderFormConfirmation(form)}
 				</Container>
 			</Card.Body>
@@ -185,7 +184,7 @@ const App = () => {
 							<Button
 								variant='primary'
 								type='button'
-								onClick={handleSubmit(formHasAtLeastOneAnsweredQuestion, setFormStep)}
+								onClick={handleSubmit(formHasAtLeastOneAnsweredQuestion, setForm, setFormStep)}
 							>
 								Submit answers
 							</Button>
@@ -194,7 +193,7 @@ const App = () => {
 							</Button>
 						</>
 					) : (
-						<Button variant='primary' onClick={() => setFormStep(FORM_STEPS.INITIAL)}>
+						<Button variant='primary' onClick={handleReset}>
 							Take the survey again
 						</Button>
 					)}

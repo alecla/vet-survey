@@ -10,7 +10,6 @@ export default [
     variant: 'outline-success',
     name: 'group-how-did-you-hear-about-us',
     id: 'radio-hear-about-us',
-    order: 1,
     fields: [
       {
         label: 'Word of mouth',
@@ -41,7 +40,6 @@ export default [
     variant: 'outline-success',
     name: 'group-overall-satisfaction',
     id: 'radio-overall-satisfaction',
-    order: 2,
     fields: [
       {
         label: '1',
@@ -72,7 +70,6 @@ export default [
     variant: 'success',
     name: 'group-opinion-staff',
     id: 'checkbox-opinion-staff',
-    order: 3,
     fields: [
       {
         label: 'Nice',
@@ -103,7 +100,6 @@ export default [
     variant: 'outline-success',
     name: 'group-recommend-us',
     id: 'radio-recommend-us',
-    order: 4,
     fields: [
       {
         label: 'Yes',
@@ -118,7 +114,6 @@ export default [
   {
     label: '5. Were our prices reasonable for the treatment required?',
     name: 'group-prices-reasonable',
-    order: 5,
     type: 'range',
     fields: [
       {
@@ -143,7 +138,6 @@ export default [
     label:
       '6. How do you think we should improve our services in future? Please tell us',
     name: 'group-improve-how',
-    order: 6,
     type: 'textarea'
   }
 ];
