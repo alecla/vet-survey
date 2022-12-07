@@ -1,5 +1,3 @@
-import { renderStarIcon } from './utils';
-
 //add types
 
 export default [
