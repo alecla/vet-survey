@@ -23,7 +23,7 @@ const FORM_INITIAL_STATE: Form = {
 };
 
 const handleSubmit =
-	(formHasAtLeastOneAnsweredQuestion: boolean, setForm: (arg: Form) => void, setFormStep: (arg: string) => void) =>
+	(formHasAtLeastOneAnsweredQuestion: boolean, setFormStep: (arg: string) => void) =>
 	(e: React.FormEvent): void => {
 		e.preventDefault();
 		if (!formHasAtLeastOneAnsweredQuestion) {
@@ -32,17 +32,18 @@ const handleSubmit =
 		}
 
 		setFormStep(FORM_STEPS.CONFIRMATION);
-		setForm(FORM_INITIAL_STATE);
 		console.log(e, 'e');
 	};
 
 const renderForm = (
 	handleChange: React.ChangeEventHandler,
 	form: Form,
-	formStep: string
+	formStep: string,
+	formHasAtLeastOneAnsweredQuestion: boolean,
+	setFormStep: (arg: string) => void
 ): JSX.Element => {
 	return (
-		<Form>
+		<Form id='surveyform' onSubmit={handleSubmit(formHasAtLeastOneAnsweredQuestion, setFormStep)}>
 			{formData.map((questionGroup) => (
 				<Form.Group key={questionGroup.name} className='mb-3'>
 					<Form.Label>{questionGroup.label}</Form.Label>
@@ -117,13 +118,17 @@ const renderFormConfirmation = (form: Form): JSX.Element => {
 			{Object.entries(form).map(([key, value]) => {
 				const getLabelForKey = formData.find((group) => group.name === key)?.label ?? '';
 				const getLabelFromValueObj = formData.find((question) => question.name === key);
-				const formattedValue: string | string[] = 
-					getLabelFromValueObj?.fields?.filter((field: {[key: string]: string}) => field.value === value || value.includes(field.value)).map((field: {[key: string]: string}) => field.label).join(', ') ||
-					value;
+				const formattedValue: string | string[] =
+					getLabelFromValueObj?.fields
+						?.filter(
+							(field: {[key: string]: string}) => field.value === value || value.includes(field.value)
+						)
+						.map((field: {[key: string]: string}) => field.label)
+						.join(', ') || value;
 				return (
 					<div key={getLabelForKey}>
 						<p>{getLabelForKey}</p>
-						<p>{formattedValue || 'Not answered'}</p>
+						<p>{formattedValue.length > 0 ? formattedValue : 'Not answered'}</p>
 						<hr />
 					</div>
 				);
@@ -154,11 +159,12 @@ const App = () => {
 		});
 	};
 
-	const handleReset = () => {
-		setFormStep(FORM_STEPS.INITIAL)
-	};
-
 	console.log(form, 'form rendeer');
+
+	const handleReset = () => {
+		setForm(FORM_INITIAL_STATE);
+		setFormStep(FORM_STEPS.INITIAL);
+	};
 
 	return (
 		<Card>
@@ -173,7 +179,7 @@ const App = () => {
 			<Card.Body>
 				<Container className='my-4'>
 					{formStep !== FORM_STEPS.CONFIRMATION
-						? renderForm(handleChange, form, formStep)
+						? renderForm(handleChange, form, formStep, formHasAtLeastOneAnsweredQuestion, setFormStep)
 						: renderFormConfirmation(form)}
 				</Container>
 			</Card.Body>
@@ -181,11 +187,7 @@ const App = () => {
 				<Stack gap={2} className='col-md-4 mx-auto my-2'>
 					{formStep !== FORM_STEPS.CONFIRMATION ? (
 						<>
-							<Button
-								variant='primary'
-								type='button'
-								onClick={handleSubmit(formHasAtLeastOneAnsweredQuestion, setForm, setFormStep)}
-							>
+							<Button variant='primary' type='submit' form='surveyform'>
 								Submit answers
 							</Button>
 							<Button variant='link' size='sm' onClick={handleReset}>
