@@ -1,5 +1,5 @@
 export const renderStarIcon = (quantity: number): JSX.Element[] => {
-  return Array.from(new Array(quantity)).map((star, index) => {
+  return Array.from(new Array(quantity)).map((_, index) => {
     return (
       <svg
         key={index}
@@ -10,6 +10,7 @@ export const renderStarIcon = (quantity: number): JSX.Element[] => {
         className="bi bi-star-fill"
         viewBox="0 0 16 16"
         aria-describedby="my-title my-description"
+        role="img"
       >
         <title id="my-title">Star</title>
         <desc id="my-description">The shape of a star</desc>

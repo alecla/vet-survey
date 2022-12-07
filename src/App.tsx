@@ -66,7 +66,7 @@ const renderForm = (
             {(questionGroup.type === 'radio' ||
               questionGroup.type === 'checkbox') && (
               <ToggleButtonGroup
-                type={questionGroup.type}
+                type={questionGroup.type === 'radio' ? questionGroup.type : undefined}
                 name={questionGroup.name}
                 value={form[questionGroup.name] ?? null}
                 defaultValue={questionGroup.defaultValue}
