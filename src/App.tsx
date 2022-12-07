@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { ReactElement, useState } from 'react';
+import { useState } from 'react';
 import {
   Alert,
   Button,
@@ -11,22 +11,6 @@ import {
   ToggleButtonGroup
 } from 'react-bootstrap';
 import formData from './form-data';
-
-/*
-
-TODO:
-* Lägg in eslint regler? typ single quotoes t.ex.
-* Ska jag sanvända stars?
-
-* SVG ska vara accessible 
-* Refaktorera
-* Fixa Types
-* Uppdatera readme
-* Testa osv
-* Lighthouse test
-
-Lämna in på lördag.
-*/
 
 type Form = {
   [key: string]: string | string[];
@@ -64,12 +48,12 @@ const handleSubmit =
   };
 
 const renderForm = (
-  handleChange: MouseEvent,
+  handleChange: React.ChangeEventHandler,
   form: Form,
   formStep: string,
   formHasAtLeastOneAnsweredQuestion: boolean,
   setFormStep: (arg: string) => void
-): ReactElement => {
+): JSX.Element => {
   return (
     <Form
       id="survey"
@@ -120,7 +104,9 @@ const renderForm = (
                   value={form[questionGroup.name] ?? ''}
                   onChange={handleChange}
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
                   {questionGroup?.fields?.map((input) => (
                     <div key={input.value}>
                       <p style={{ textAlign: 'left' }}>{input.label}</p>
@@ -144,14 +130,20 @@ const renderForm = (
   );
 };
 
-const renderFormConfirmation = (form: Form): ReactElement => {
+const renderFormConfirmation = (form: Form): JSX.Element => {
   return (
     <Alert variant="success">
       {Object.entries(form).map(([key, value]) => {
         const getLabelForKey =
           formData.find((group) => group.name === key)?.label ?? '';
-          const getLabelFromValue = formData.find(question => question.name === key);
-          const formattedValue = (getLabelFromValue && getLabelFromValue?.fields?.find(field => field.value === value)?.label) ?? 'Not answered';
+        const getLabelFromValue = formData.find(
+          (question) => question.name === key
+        );
+        const formattedValue =
+          (getLabelFromValue &&
+            getLabelFromValue?.fields?.find((field) => field.value === value)
+              ?.label) ??
+          'Not answered';
         return (
           <div key={getLabelForKey}>
             <p>{getLabelForKey}</p>
@@ -167,9 +159,10 @@ const renderFormConfirmation = (form: Form): ReactElement => {
 const App = () => {
   const [formStep, setFormStep] = useState(FORM_STEPS.INITIAL);
   const [form, setForm] = useState(FORM_INITIAL_STATE);
-  const formHasAtLeastOneAnsweredQuestion: boolean = Object.values(form).filter(
-    (input: string | string[]) => input && input.length > 0
-  ).length > 1;
+  const formHasAtLeastOneAnsweredQuestion: boolean =
+    Object.values(form).filter(
+      (input: string | string[]) => input && input.length > 0
+    ).length > 1;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const currentValueForInput: string | string[] = form[e.target.name];
