@@ -159,7 +159,7 @@ const App = () => {
 		});
 	};
 
-	console.log(form, 'form rendeer');
+	console.log(form, 'form rendee');
 
 	const handleReset = () => {
 		setForm(FORM_INITIAL_STATE);
