@@ -1,2 +1,2 @@
 # vet-survey
-Vet-survey built with TS/React
+Vet-survey built with Typescript and React

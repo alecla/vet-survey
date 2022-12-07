@@ -24,7 +24,6 @@
   ],
   "ignorePatterns": ["**/dist/*', '*.md"],
   "rules": {
-    "quotes": [2, "single", { "avoidEscape": true }],
     "semi": "error",
     "comma-dangle": "off",
     "no-multiple-empty-lines": "error",

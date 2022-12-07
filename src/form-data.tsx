@@ -1,5 +1,7 @@
 import { renderStarIcon } from './utils';
 
+//add types
+
 export default [
   {
     defaultValue: null,
