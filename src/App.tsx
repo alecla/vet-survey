@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState} from 'react';
 import {Alert, Button, Card, Container, Form, Stack, ToggleButton, ToggleButtonGroup} from 'react-bootstrap';
-import {FormSteps, FormObj} from './types';
+import {FormSteps, FormState} from './types';
 import formData from './form-data';
 
 const FORM_STEPS: FormSteps = {
@@ -10,10 +10,10 @@ const FORM_STEPS: FormSteps = {
 	INVALID: 'INVALID'
 };
 
-const FORM_INITIAL_STATE: FormObj = formData
-	.map((group) => {
+const FORM_INITIAL_STATE: FormState = formData
+	.map((inputGroup) => {
 		return {
-			[group.name]: group.defaultValue ?? ''
+			[inputGroup.name]: inputGroup.defaultValue ?? ''
 		};
 	})
 	.reduce((prev, curr) => ({...prev, ...curr}), {});
@@ -32,61 +32,61 @@ const handleSubmit =
 
 const renderForm = (
 	handleChange: React.ChangeEventHandler,
-	form: FormObj,
+	form: FormState,
 	formStep: string,
 	formHasAtLeastOneAnsweredQuestion: boolean,
 	setFormStep: (arg: string) => void
 ): JSX.Element => {
 	return (
 		<Form id='surveyform' onSubmit={handleSubmit(formHasAtLeastOneAnsweredQuestion, setFormStep)}>
-			{formData.map((questionGroup) => (
-				<Form.Group key={questionGroup.name} className='mb-3'>
-					<Form.Label>{questionGroup.label}</Form.Label>
+			{formData.map((inputGroup) => (
+				<Form.Group key={inputGroup.name} className='mb-3'>
+					<Form.Label>{inputGroup.label}</Form.Label>
 					<Container>
-						{(questionGroup.type === 'radio' || questionGroup.type === 'checkbox') && (
+						{(inputGroup.type === 'radio' || inputGroup.type === 'checkbox') && (
 							<ToggleButtonGroup
-								type={questionGroup.type}
-								name={questionGroup.name}
-								value={form[questionGroup.name] ?? null}
-								defaultValue={questionGroup.defaultValue}
+								type={inputGroup.type}
+								name={inputGroup.name}
+								value={form[inputGroup.name] ?? null}
+								defaultValue={inputGroup.defaultValue}
 								className='mb-2'
 							>
-								{questionGroup?.fields?.map((input, index) => (
+								{inputGroup?.fields?.map((field: {[key: string]: string}, index: number) => (
 									<ToggleButton
-										key={`${input.value}-${index}`}
-										variant={questionGroup.variant}
-										id={`${questionGroup.id}-${input.value}`}
-										value={input.value}
+										key={`${field.value}-${index}`}
+										variant={inputGroup.variant}
+										id={`${inputGroup.id}-${field.value}`}
+										value={field.value}
 										onChange={handleChange}
 									>
-										{input.label}
+										{field.label}
 									</ToggleButton>
 								))}
 							</ToggleButtonGroup>
 						)}
-						{questionGroup.type === 'textarea' && (
+						{inputGroup.type === 'textarea' && (
 							<Form.Control
-								key={questionGroup.name}
-								name={questionGroup.name}
-								value={form[questionGroup.name] ?? ''}
+								key={inputGroup.name}
+								name={inputGroup.name}
+								value={form[inputGroup.name] ?? ''}
 								onChange={handleChange}
 								as='textarea'
 								rows={3}
 							/>
 						)}
-						{questionGroup.type === 'range' && (
+						{inputGroup.type === 'range' && (
 							<>
 								<Form.Range
-									name={questionGroup.name}
+									name={inputGroup.name}
 									min={1}
-									max={questionGroup.fields?.length}
-									value={form[questionGroup.name] ?? ''}
+									max={inputGroup.fields?.length}
+									value={form[inputGroup.name] ?? ''}
 									onChange={handleChange}
 								/>
 								<div style={{display: 'flex', justifyContent: 'space-between'}}>
-									{questionGroup?.fields?.map((input) => (
-										<div key={input.value}>
-											<p style={{textAlign: 'left'}}>{input.label}</p>
+									{inputGroup?.fields?.map((field: {[key: string]: string}) => (
+										<div key={field.value}>
+											<p style={{textAlign: 'left'}}>{field.label}</p>
 										</div>
 									))}
 								</div>
@@ -107,12 +107,12 @@ const renderForm = (
 	);
 };
 
-const renderFormConfirmation = (form: FormObj): JSX.Element => {
+const renderFormConfirmation = (form: FormState): JSX.Element => {
 	return (
 		<Alert variant='success'>
 			{Object.entries(form).map(([key, value]) => {
-				const getLabelForKey = formData.find((group) => group.name === key)?.label ?? '';
-				const getLabelFromValueObj = formData.find((question) => question.name === key);
+				const getLabelForKey = formData.find((inputGroup) => inputGroup.name === key)?.label ?? '';
+				const getLabelFromValueObj = formData.find((inputGroup) => inputGroup.name === key);
 				const formattedValue: string | string[] =
 					getLabelFromValueObj?.fields
 						?.filter(
@@ -133,18 +133,18 @@ const renderFormConfirmation = (form: FormObj): JSX.Element => {
 };
 
 const App = () => {
-	const [formStep, setFormStep] = useState(FORM_STEPS.CONFIRMATION);
+	const [formStep, setFormStep] = useState(FORM_STEPS.INITIAL);
 	const [form, setForm] = useState(FORM_INITIAL_STATE);
 	const formHasAtLeastOneAnsweredQuestion: boolean =
-		Object.values(form).filter((input: string | string[]) => input && input.length > 0).length > 1;
+		Object.values(form).filter((inputGroup: string | string[]) => inputGroup && inputGroup.length > 0).length > 1;
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		const currentValueForInput: string | string[] = form[e.target.name];
 
 		const value =
 			typeof currentValueForInput !== 'string'
-				? currentValueForInput?.some((item: string) => item === e.target.value)
-					? currentValueForInput.filter((item: string) => item !== e.target.value)
+				? currentValueForInput?.some((input: string) => input === e.target.value)
+					? currentValueForInput.filter((input: string) => input !== e.target.value)
 					: [...currentValueForInput, e.target.value]
 				: e.target.value;
 

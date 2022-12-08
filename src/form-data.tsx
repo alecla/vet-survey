@@ -1,6 +1,6 @@
-//add types
+import {FormData} from './types';
 
-export default [
+const formData: FormData[] = [
 	{
 		defaultValue: null,
 		label: '1. How did you hear about us?',
@@ -113,6 +113,7 @@ export default [
 		defaultValue: '3',
 		label: '5. Were our prices reasonable for the treatment required?',
 		name: 'group-prices-reasonable',
+		id: 'range-prices-reasonable',
 		type: 'range',
 		fields: [
 			{
@@ -134,8 +135,13 @@ export default [
 		]
 	},
 	{
+		defaultValue: null,
 		label: '6. How do you think we should improve our services in future? Please tell us',
 		name: 'group-improve-how',
-		type: 'textarea'
+		id: 'textarea-prices-reasonable',
+		type: 'textarea',
+		fields: []
 	}
 ];
+
+export default formData;
