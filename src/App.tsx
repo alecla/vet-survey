@@ -166,8 +166,6 @@ const App = () => {
 		setFormStep(FORM_STEPS.INITIAL);
 	};
 
-	console.log(form, 'form render');
-
 	return (
 		<Container className='my-4 w-50'>
 			<Card>
