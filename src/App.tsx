@@ -113,6 +113,10 @@ const renderForm = (
 const renderFormConfirmation = (form: FormState): JSX.Element => {
 	return (
 		<Alert variant='success'>
+			<Stack key='resetbutton' gap={2} className='w-50 mx-auto my-4'>
+				<iframe src='https://giphy.com/embed/D8HLAWDFmPauTi5QV7'></iframe>
+				<h5 className='text-center my-4'>You can see your answers below:</h5>
+			</Stack>
 			{Object.entries(form).map(([key, value]) => {
 				const getLabelForKey = formData.find((inputGroup) => inputGroup.name === key)?.label ?? '';
 				const getLabelFromValueObj = formData.find((inputGroup) => inputGroup.name === key);
@@ -125,8 +129,8 @@ const renderFormConfirmation = (form: FormState): JSX.Element => {
 						.join(', ') || value;
 				return (
 					<div key={getLabelForKey}>
-						<p>{getLabelForKey}</p>
-						<p>{formattedValue.length > 0 ? formattedValue : 'Not answered'}</p>
+						<p className='fw-bolder'>{getLabelForKey}</p>
+						<p>{formattedValue.length > 0 ? formattedValue : 'No answer'}</p>
 						<hr />
 					</div>
 				);
@@ -165,41 +169,43 @@ const App = () => {
 	console.log(form, 'form render');
 
 	return (
-		<Card>
-			<Card.Header>
-				<h1>Veterinary consultation survey</h1>
-				<h5>
-					{formStep !== FORM_STEPS.CONFIRMATION
-						? 'Please take a few minutes of your time to fill in the following survey'
-						: 'Thank you for completing our survey. Here have a cookie!'}
-				</h5>
-			</Card.Header>
-			<Card.Body>
-				<Container className='my-4'>
-					{formStep !== FORM_STEPS.CONFIRMATION
-						? renderForm(handleChange, form, formStep, formHasAtLeastOneAnsweredQuestion, setFormStep)
-						: renderFormConfirmation(form)}
-				</Container>
-			</Card.Body>
-			<Card.Footer>
-				{formStep !== FORM_STEPS.CONFIRMATION ? (
-					<Stack key='submitandresetbuttons' gap={2} className='col-md-4 mx-auto my-2'>
-						<Button variant='primary' type='submit' form='surveyform'>
-							Submit answers
-						</Button>
-						<Button variant='link' size='sm' onClick={handleReset}>
-							Reset form
-						</Button>
-					</Stack>
-				) : (
-					<Stack key='resetbutton' gap={2} className='col-md-4 mx-auto my-2'>
-						<Button variant='primary' type='button' id='cancel' onClick={handleReset}>
-							Take the survey again
-						</Button>
-					</Stack>
-				)}
-			</Card.Footer>
-		</Card>
+		<Container className='my-4 w-50'>
+			<Card>
+				<Card.Header>
+					<h1>Veterinary consultation survey</h1>
+					<h5>
+						{formStep !== FORM_STEPS.CONFIRMATION
+							? 'Please take a few minutes of your time to answer the following questions'
+							: 'Thank you for completing our survey!'}
+					</h5>
+				</Card.Header>
+				<Card.Body>
+					<Container className='my-4'>
+						{formStep !== FORM_STEPS.CONFIRMATION
+							? renderForm(handleChange, form, formStep, formHasAtLeastOneAnsweredQuestion, setFormStep)
+							: renderFormConfirmation(form)}
+					</Container>
+				</Card.Body>
+				<Card.Footer>
+					{formStep !== FORM_STEPS.CONFIRMATION ? (
+						<Stack key='submitandresetbuttons' gap={2} className='col-md-4 mx-auto my-2'>
+							<Button variant='primary' type='submit' form='surveyform'>
+								Submit answers
+							</Button>
+							<Button variant='link' size='sm' onClick={handleReset}>
+								Reset form
+							</Button>
+						</Stack>
+					) : (
+						<Stack key='resetbutton' gap={2} className='col-md-4 mx-auto my-2'>
+							<Button variant='primary' type='button' id='cancel' onClick={handleReset}>
+								Take the survey again
+							</Button>
+						</Stack>
+					)}
+				</Card.Footer>
+			</Card>
+		</Container>
 	);
 };
 
