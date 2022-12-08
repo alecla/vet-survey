@@ -7,14 +7,13 @@
     "dev": "vite",
     "build": "npm run lint && tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .tsx"
+    "lint": "eslint . --ext .tsx,.ts"
   },
   "dependencies": {
     "bootstrap": "^5.2.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.6.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.4"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.24",

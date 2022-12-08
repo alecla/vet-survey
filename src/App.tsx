@@ -1,17 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState} from 'react';
 import {Alert, Button, Card, Container, Form, Stack, ToggleButton, ToggleButtonGroup} from 'react-bootstrap';
+import {FormSteps, FormObj} from './types';
 import formData from './form-data';
-
-type FormObj = {
-	[key: string]: string | string[];
-};
-
-type FormSteps = {
-	INITIAL: string;
-	CONFIRMATION: string;
-	INVALID: string;
-};
 
 const FORM_STEPS: FormSteps = {
 	INITIAL: 'INITIAL_STEP',
@@ -54,7 +45,7 @@ const renderForm = (
 					<Container>
 						{(questionGroup.type === 'radio' || questionGroup.type === 'checkbox') && (
 							<ToggleButtonGroup
-								type={questionGroup.type as any}
+								type={questionGroup.type}
 								name={questionGroup.name}
 								value={form[questionGroup.name] ?? null}
 								defaultValue={questionGroup.defaultValue}
@@ -142,7 +133,7 @@ const renderFormConfirmation = (form: FormObj): JSX.Element => {
 };
 
 const App = () => {
-	const [formStep, setFormStep] = useState(FORM_STEPS.INITIAL);
+	const [formStep, setFormStep] = useState(FORM_STEPS.CONFIRMATION);
 	const [form, setForm] = useState(FORM_INITIAL_STATE);
 	const formHasAtLeastOneAnsweredQuestion: boolean =
 		Object.values(form).filter((input: string | string[]) => input && input.length > 0).length > 1;
@@ -188,22 +179,22 @@ const App = () => {
 				</Container>
 			</Card.Body>
 			<Card.Footer>
-				<Stack gap={2} className='col-md-4 mx-auto my-2'>
-					{formStep !== FORM_STEPS.CONFIRMATION ? (
-						<>
-							<Button variant='primary' type='submit' form='surveyform'>
-								Submit answers
-							</Button>
-							<Button variant='link' size='sm' onClick={handleReset}>
-								Reset form
-							</Button>
-						</>
-					) : (
-						<Button variant='primary' onClick={handleReset}>
+				{formStep !== FORM_STEPS.CONFIRMATION ? (
+					<Stack key='submitandresetbuttons' gap={2} className='col-md-4 mx-auto my-2'>
+						<Button variant='primary' type='submit' form='surveyform'>
+							Submit answers
+						</Button>
+						<Button variant='link' size='sm' onClick={handleReset}>
+							Reset form
+						</Button>
+					</Stack>
+				) : (
+					<Stack key='resetbutton' gap={2} className='col-md-4 mx-auto my-2'>
+						<Button variant='primary' type='button' id='cancel' onClick={handleReset}>
 							Take the survey again
 						</Button>
-					)}
-				</Stack>
+					</Stack>
+				)}
 			</Card.Footer>
 		</Card>
 	);
