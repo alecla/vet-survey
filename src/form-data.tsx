@@ -62,7 +62,7 @@ export default [
     ]
   },
   {
-    defaultValue: null,
+    defaultValue: [],
     label: '3. What was your opinion of the staff at the clinic?',
     type: 'checkbox',
     variant: 'success',
@@ -110,6 +110,7 @@ export default [
     ]
   },
   {
+    defaultValue: '3',
     label: '5. Were our prices reasonable for the treatment required?',
     name: 'group-prices-reasonable',
     type: 'range',

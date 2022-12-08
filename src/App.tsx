@@ -3,24 +3,29 @@ import {useState} from 'react';
 import {Alert, Button, Card, Container, Form, Stack, ToggleButton, ToggleButtonGroup} from 'react-bootstrap';
 import formData from './form-data';
 
-type Form = {
+type FormObj = {
 	[key: string]: string | string[];
 };
 
-const FORM_STEPS = {
+type FormSteps = {
+	INITIAL: string;
+	CONFIRMATION: string;
+	INVALID: string;
+};
+
+const FORM_STEPS: FormSteps = {
 	INITIAL: 'INITIAL_STEP',
 	CONFIRMATION: 'SUCCESS_STEP',
 	INVALID: 'INVALID'
 };
 
-const FORM_INITIAL_STATE: Form = {
-	'group-how-did-you-hear-about-us': '',
-	'group-overall-satisfaction': '',
-	'group-opinion-staff': [],
-	'group-recommend-us': '',
-	'group-prices-reasonable': '3',
-	'group-improve-how': ''
-};
+const FORM_INITIAL_STATE: FormObj = formData
+	.map((group) => {
+		return {
+			[group.name]: group.defaultValue ?? ''
+		};
+	})
+	.reduce((prev, curr) => ({...prev, ...curr}), {});
 
 const handleSubmit =
 	(formHasAtLeastOneAnsweredQuestion: boolean, setFormStep: (arg: string) => void) =>
@@ -32,12 +37,11 @@ const handleSubmit =
 		}
 
 		setFormStep(FORM_STEPS.CONFIRMATION);
-		console.log(e, 'e');
 	};
 
 const renderForm = (
 	handleChange: React.ChangeEventHandler,
-	form: Form,
+	form: FormObj,
 	formStep: string,
 	formHasAtLeastOneAnsweredQuestion: boolean,
 	setFormStep: (arg: string) => void
@@ -112,7 +116,7 @@ const renderForm = (
 	);
 };
 
-const renderFormConfirmation = (form: Form): JSX.Element => {
+const renderFormConfirmation = (form: FormObj): JSX.Element => {
 	return (
 		<Alert variant='success'>
 			{Object.entries(form).map(([key, value]) => {
@@ -147,10 +151,10 @@ const App = () => {
 		const currentValueForInput: string | string[] = form[e.target.name];
 
 		const value =
-			e.target.type === 'checkbox' && typeof currentValueForInput !== 'string'
-				? currentValueForInput?.some((item) => item === e.target.value)
-					? currentValueForInput.filter((item) => item !== e.target.value)
-					: [...(currentValueForInput ?? []), e.target.value]
+			typeof currentValueForInput !== 'string'
+				? currentValueForInput?.some((item: string) => item === e.target.value)
+					? currentValueForInput.filter((item: string) => item !== e.target.value)
+					: [...currentValueForInput, e.target.value]
 				: e.target.value;
 
 		setForm({
@@ -159,12 +163,12 @@ const App = () => {
 		});
 	};
 
-	console.log(form, 'form render');
-
-	const handleReset = () => {
+	const handleReset = (): void => {
 		setForm(FORM_INITIAL_STATE);
 		setFormStep(FORM_STEPS.INITIAL);
 	};
+
+	console.log(form, 'form render');
 
 	return (
 		<Card>
@@ -172,7 +176,7 @@ const App = () => {
 				<h1>Veterinary consultation survey</h1>
 				<h5>
 					{formStep !== FORM_STEPS.CONFIRMATION
-						? 'Please take a few minutes of your time to fill in the following questions'
+						? 'Please take a few minutes of your time to fill in the following survey'
 						: 'Thank you for completing our survey. Here have a cookie!'}
 				</h5>
 			</Card.Header>
