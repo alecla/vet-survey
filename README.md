@@ -12,8 +12,8 @@ npm i
 
 # dev
 npm run dev
-
-open up: http://localhost:5173/
 ```
+
+Visit [http://localhost:5173/](http://localhost:5173/)
 
 Enjoy!
