@@ -16,7 +16,10 @@ const FORM_INITIAL_STATE: FormState = formData
 			[inputGroup.name]: inputGroup.defaultValue ?? ''
 		};
 	})
-	.reduce((prev, curr) => ({...prev, ...curr}), {});
+	.reduce(
+		(prev: {[x: string]: string | string[]}, curr: {[x: string]: string | string[]}) => ({...prev, ...curr}),
+		{}
+	);
 
 const handleSubmit =
 	(formHasAtLeastOneAnsweredQuestion: boolean, setFormStep: (arg: string) => void) =>
@@ -45,7 +48,7 @@ const renderForm = (
 					<Container>
 						{(inputGroup.type === 'radio' || inputGroup.type === 'checkbox') && (
 							<ToggleButtonGroup
-								type={inputGroup.type}
+								type={inputGroup.type as any}
 								name={inputGroup.name}
 								value={form[inputGroup.name] ?? null}
 								defaultValue={inputGroup.defaultValue}
